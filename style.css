@@ -1,0 +1,52 @@
+body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+}
+
+header {
+    height: 100px;
+    width: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+main {
+    height: inherit;
+    width: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: aliceblue;
+}
+
+.gameboard {
+    height: 440px;
+    width: 440px;
+    background-color: white;
+    color: white;
+    display: grid;
+    grid-template-columns: repeat(3, 140px);
+    grid-template-rows: repeat(3, 140px);
+    gap: 10px;
+    border: solid;
+    border-color: burlywood;
+    border-width: 10px;
+}
+
+.gridBox {
+    height: 140px;
+    width: 140;
+    background-color: black;
+    color: white;
+    font-size: 72px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
