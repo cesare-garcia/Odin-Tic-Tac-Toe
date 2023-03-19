@@ -5,7 +5,29 @@ gameGrid.forEach(element => {
     });
 });
 
+const player1 = createPlayerObject("jon","X");
 
+// gameboard module
+
+var gameBoard = (function(play) {
+
+    let gameArray = [];
+
+    let test = function addPlay(play) {
+        
+        if ( gameArray.length <= 8 ) {
+            return gameArray.push(play);
+        } else {
+            return `Tie!`
+        }
+    };
+
+    return {
+        array: gameArray,
+        method: test
+    };
+
+})();
 
 
 
@@ -15,4 +37,4 @@ gameGrid.forEach(element => {
 function createPlayerObject(name, token) {
     console.log(`${name} will play as ${token}`);
     return { name, token };
-}
+};
