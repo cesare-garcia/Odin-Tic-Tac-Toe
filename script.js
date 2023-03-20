@@ -1,53 +1,86 @@
+var selectStart = (function(){
+    let startButton = document.querySelector("#start");
+    startButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        game.start();
+        document.querySelector("#new_game").disabled = false;
+    });
+    return { startButton };
+})();
+
+var selectReset = (function(){
+    let newGameButton = document.querySelector("#new_game");
+    newGameButton.addEventListener("click", (e) => {
+        alert("Resetting Page");
+    });
+})();
 
 var gameBoard = (function(){
 
     let board = ["","","","","","","","",""];
 
-    // we want the gameboard to render automatically, therefore use IIFE
-    let render = (function() {
+    let render = function() {
 
-        let grid = document.querySelector(".grid");
-    
-        // board -> referencing elements of the array and using them to build html divs
-
-        board.forEach( (element, index) => {
-            let gridBox = document.createElement("div");
-            gridBox.classList.add("gridBox");
-            gridBox.setAttribute("id", `${index}`);
-            gridBox.innerText = `${element}`;
-            grid.appendChild(gridBox);
-        });
-
-        let boxes = document.querySelectorAll(".gridBox");
-        boxes.forEach( (element) => {
-            element.addEventListener("click", (e) => {
-                console.log(e.target.id);
+        if ( document.querySelector(".grid") == undefined ) {
+            let main = document.querySelector("main");
+            let grid = document.createElement("div");
+            grid.classList.add("grid");
+            main.appendChild(grid);
+            
+            board.forEach( (element, index) => {
+                let gridBox = document.createElement("div");
+                gridBox.classList.add("gridBox");
+                gridBox.setAttribute("id", `${index}`);
+                gridBox.innerText = `${element}`;
+                grid.appendChild(gridBox);
             });
-        });
-    })();
+    
+            let boxes = document.querySelectorAll(".gridBox");
+            boxes.forEach( (element) => {
+                element.addEventListener("click", (e) => {
+                    console.log(e.target.id);
+                });
+            });
+        };
+    };
+
+    let checkBoard = function() {
+        console.log(board);
+    };
+
+    // the update function that is returned will be the one that allows board to be adjusted.
+    return { checkBoard, render };
+
 })();
 
 function playerFactory(name, token) {
     return {name, token};
 }
 
-let start = (function() {
-    let startButton = document.querySelector("#start");
-    let form = document.querySelector("form");
-    startButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        let firstPlayerName = document.querySelector("#player1").value;
-        let secondPlayerName = document.querySelector("#player2").value;
+var game = (function(){
+    
+    let start = function() {
 
-        if ( firstPlayerName != "" && secondPlayerName != "" ) {
-            let playerOne = playerFactory(firstPlayerName, "X");
-            console.log(playerOne);
-            let playerTwo = playerFactory(secondPlayerName, "O");
-            console.log(playerTwo);
+        if ( document.querySelector("#player1").value != "" && document.querySelector("#player2").value != "" ) {
+            var playerOne = playerFactory(document.querySelector("#player1").value,"X");
+            var playerTwo = playerFactory(document.querySelector("#player2").value, "O");
+            gameBoard.render();
+            selectStart.startButton.disabled = "true";
+            let form = document.querySelector("form");
             form.reset();
-        } else {
-            alert("Names must be submitted for both players before beginning the game");
-        }
-    });
-})();
 
+            return { playerOne, playerTwo };
+
+        } else {
+            alert("You must enter names for both players to start the game.");
+        }
+    };
+
+    
+
+
+
+
+    return { start };
+
+})();
