@@ -5,7 +5,7 @@ body {
 }
 
 header {
-    height: 100px;
+    height: 80px;
     width: inherit;
     display: flex;
     justify-content: center;
@@ -21,12 +21,32 @@ main {
     height: inherit;
     width: inherit;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     background-color: aliceblue;
 }
 
-.gameboard {
+form {
+    height: 90px;
+    width: 200px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.playerInput {
+    display: flex;
+    gap: 5px;
+}
+
+.button-container {
+    display: flex;
+    gap: 15px;
+}
+
+
+.grid {
     height: 440px;
     width: 440px;
     background-color: white;
