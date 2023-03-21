@@ -24,21 +24,35 @@ var gameBoard = ( () => {
     
             let boxes = document.querySelectorAll(".gridBox");
             boxes.forEach( (element) => {
-                element.addEventListener("click", (e) => {
-                    console.log(e.target.id); // this will need to be currentTurn.marker
-                });
+                element.addEventListener("click", game.handleClick);
+            });
+        } else {
+            
+            let main = document.querySelector("main");
+            let removeGrid = document.querySelector(".grid");
+            main.removeChild(removeGrid);
+            let grid = document.createElement("div");
+            grid.classList.add("grid");
+            main.appendChild(grid);
+            
+            board.forEach( (element, index) => {
+                let gridBox = document.createElement("div");
+                gridBox.classList.add("gridBox");
+                gridBox.setAttribute("id", `${index}`);
+                gridBox.innerText = `${element}`;
+                grid.appendChild(gridBox);
+            });
+    
+            let boxes = document.querySelectorAll(".gridBox");
+            boxes.forEach( (element) => {
+                element.addEventListener("click", game.handleClick);
             });
         };
     };
 
-    let update = function() {
-        // let boxes = document.querySelectorAll(".gridBox");
-        // boxes.forEach( (element) => {
-        //     element.addEventListener("click", (e) => {
-        //         e.target.innerText = "X"; // this will need to be currentTurn.marker
-        //     });
-        // });
-
+    let update = (index, value) => {
+        board[index] = value;
+        gameBoard.render();
     };
 
     return { checkBoard, render, update };
@@ -65,13 +79,37 @@ const game = (() => {
         gameBoard.render();
     };
 
+    const handleClick = (event) => {
+        let index = event.target.id;
+        gameBoard.update(index, players[currentPlayerIndex].token);
+        if ( currentPlayerIndex == 0 ) {
+            currentPlayerIndex = 1;
+        } else if ( currentPlayerIndex == 1 ) {
+            currentPlayerIndex = 0;
+        }
+    };
 
-    return { start };
+
+    return {
+        start,
+        handleClick
+    };
 
 })();
+
+const restartButton = document.querySelector("#new_game");
+restartButton.disabled = true;
 
 const startButton = document.querySelector("#start");
 startButton.addEventListener("click", (e) => {
     e.preventDefault();
     game.start();
+    let form = document.querySelector("form");
+    form.reset();
+    startButton.disabled = true;
+    restartButton.disabled = false;
+});
+
+restartButton.addEventListener("click", (e) => {
+    alert("Resetting page.");
 });
