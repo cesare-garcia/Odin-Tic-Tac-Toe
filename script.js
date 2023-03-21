@@ -1,10 +1,17 @@
+var displayController = (() => {
+        const displayMessage = (message) => {
+        document.querySelector("#message").innerHTML = message;
+    };
+    return {
+        displayMessage
+    };
+})();
+
 var gameBoard = ( () => {
 
     let board = ["","","","","","","","",""];
 
-    let checkBoard = function() {
-        console.log(board);
-    };
+    const checkBoard = () => board;
 
     const render = function() {
 
@@ -51,8 +58,10 @@ var gameBoard = ( () => {
     };
 
     let update = (index, value) => {
-        board[index] = value;
-        gameBoard.render();
+        if ( board[index] == "") {
+            board[index] = value;
+            gameBoard.render();
+        }
     };
 
     return { checkBoard, render, update };
@@ -82,6 +91,14 @@ const game = (() => {
     const handleClick = (event) => {
         let index = event.target.id;
         gameBoard.update(index, players[currentPlayerIndex].token);
+        if ( checkForWin(gameBoard.checkBoard(), players[currentPlayerIndex].token) ) {
+            gameOver = true;
+            displayController.displayMessage(`${players[currentPlayerIndex].name} won the match`);
+        } else if (checkForTie(gameBoard.checkBoard()) ) {
+            gameOver = true;
+            displayController.displayMessage(`It's a tie`);
+        }
+        
         if ( currentPlayerIndex == 0 ) {
             currentPlayerIndex = 1;
         } else if ( currentPlayerIndex == 1 ) {
@@ -89,10 +106,34 @@ const game = (() => {
         }
     };
 
+    function checkForWin(board) {
+        const winningCombos = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+        for ( let i = 0; i < winningCombos.length; i++ ) {
+            const [a, b, c] = winningCombos[i];
+            if ( board[a] && board[a] === board[b] && board[a] === board[c] ) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    function checkForTie(board) {
+        return board.every(cell => cell !== "");
+    }
 
     return {
         start,
-        handleClick
+        handleClick,
     };
 
 })();
@@ -102,12 +143,18 @@ restartButton.disabled = true;
 
 const startButton = document.querySelector("#start");
 startButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    game.start();
-    let form = document.querySelector("form");
-    form.reset();
-    startButton.disabled = true;
-    restartButton.disabled = false;
+    if ( document.querySelector("#player1").value != "" && document.querySelector("#player2").value != "") {
+        e.preventDefault();
+        game.start();
+        let form = document.querySelector("form");
+        form.reset();
+        startButton.disabled = true;
+        restartButton.disabled = false;
+    } else {
+        alert("Takes two to play.");
+    }
+    
+
 });
 
 restartButton.addEventListener("click", (e) => {
