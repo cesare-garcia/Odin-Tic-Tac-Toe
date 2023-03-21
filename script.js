@@ -51,15 +51,27 @@ function playerFactory(name, token) {
 
 const game = (() => {
 
+    let players = [];
+    let currentPlayerIndex;
+    let gameOver;
+
+    const start = () => {
+        players = [
+            playerFactory(document.querySelector("#player1").value, "X"),
+            playerFactory(document.querySelector("#player2").value, "O")
+        ];
+        currentPlayerIndex = 0;
+        gameOver = false;
+        gameBoard.render();
+    };
+
+
+    return { start };
+
 })();
-
-
-
-
-
-
 
 const startButton = document.querySelector("#start");
 startButton.addEventListener("click", (e) => {
-    console.log("testing");
+    e.preventDefault();
+    game.start();
 });
